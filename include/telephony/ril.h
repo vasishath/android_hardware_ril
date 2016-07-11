@@ -733,6 +733,8 @@ typedef enum {
     PDP_FAIL_TETHERED_CALL_ACTIVE = -6,   /* data call was disconnected by modem because tethered
                                              mode was up on same APN/data profile - no retry until
                                              tethered call is off */
+    PDP_FAIL_IPV4_CALL_THROTTLED = -7,
+    PDP_FAIL_IPV6_CALL_THROTTLED = -8,
 
     PDP_FAIL_ERROR_UNSPECIFIED = 0xffff,  /* retry silently */
 } RIL_DataCallFailCause;
@@ -4031,7 +4033,7 @@ typedef struct {
  * RIL_REQUEST_VOICE_RADIO_TECH
  *
  * Query the radio technology type (3GPP/3GPP2) used for voice. Query is valid only
- * when radio state is RADIO_STATE_ON
+ * when radio state is not RADIO_STATE_UNAVAILABLE
  *
  * "data" is NULL
  * "response" is int *
@@ -4530,6 +4532,26 @@ typedef struct {
  * GENERIC_FAILURE
  */
 #define RIL_REQUEST_GET_ACTIVITY_INFO 135
+
+/**
+ * RIL_REQUEST_SIM_GET_ATR
+ *
+ * Get the ATR from SIM Card
+ *
+ * Only valid when radio state is "RADIO_STATE_ON"
+ *
+ * "data" is const int *
+ * ((const int *)data)[0] contains the slot index on the SIM from which ATR is requested.
+ *
+ * "response" is a const char * containing the ATR, See ETSI 102.221 8.1 and ISO/IEC 7816 3
+ *
+ * Valid errors:
+ *
+ * SUCCESS
+ * RADIO_NOT_AVAILABLE (radio resetting)
+ * GENERIC_FAILURE
+ */
+#define RIL_REQUEST_SIM_GET_ATR 136
 
 /***********************************************************************/
 
